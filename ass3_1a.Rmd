@@ -1,0 +1,366 @@
+---
+title: "Assignment_3"
+output: md_document
+---
+
+```{r}
+folder = 'E:\\Sadna_Lamadan\\Assignment 3\\termDocMatrix'
+setwd(folder)
+
+#Or for all chuncks in this Rmarkdown:
+knitr::opts_knit$set(root.dir = folder)
+
+```
+
+install igraph:
+```{r}
+#install.packages("igraph")
+#install.packages("digest")
+#install.packages("rgl")
+#install.packages("base64enc")
+library(twitteR)
+library(httr)
+library(jsonlite)
+library(wordcloud)
+library(tm)
+library(base64enc)
+library(digest)
+library(rgl)
+library(igraph)
+library(rmarkdown)
+library(knitr)
+library(dplyr)
+```
+
+Let's plot the grey anatomy characters' relationship graph
+```{r}
+ga.data <- read.csv('ga_edgelist.csv', header=TRUE, stringsAsFactors=FALSE)
+ga.vrtx <- read.csv('ga_actors.csv', header=TRUE, stringsAsFactors=FALSE)
+g <- graph.data.frame(ga.data, vertices=ga.vrtx, directed=FALSE)
+plot(g)
+```
+
+1a Calculate the max betweenness, closeness and eigenvector for the largest component of the GA graph.
+
+1a.1: Calculate the max betweenness for the largest component in g
+
+First, we isolate the main component of g:
+```{r}
+main_component <- components(g, mode = c("strong"))$membership
+
+V(g)$comp <- main_component
+g_main_component <- induced_subgraph(g,V(g)$comp==1)
+plot(g_main_component)
+```
+
+We calculate the betweenness for all characters in the component
+```{r}
+calculated_betweenness <- betweenness(g_main_component, v = V(g_main_component), directed = FALSE, weights = NULL,
+  nobigint = TRUE, normalized = FALSE)
+calculated_betweenness
+```
+
+Now, we extract the maximum betweenness value. The max betweenness value is: Sloan (115.3667)
+```{r}
+max_betweenness <- max(calculated_betweenness)
+max_betweenness_character <- V(g_main_component)[as.numeric(which(calculated_betweenness == max_betweenness))]
+max_betweenness_character
+max_betweenness
+```
+
+
+1a.2: Calculate the max Closeness for the largest component in the graph
+```{r}
+calculated_closeness <- closeness(g_main_component, v = V(g_main_component), weights = NULL, normalized = FALSE)
+calculated_closeness
+```
+
+Now, extract the maximum closeness value. The max closeness value is: Torres (0.01754386)
+```{r}
+max_closeness <- max(calculated_closeness)
+max_closeness_character <- V(g_main_component)[as.numeric(which(calculated_closeness == max_closeness))]
+max_closeness_character
+max_closeness
+```
+
+1a.3: Calculate the max Eigenvector for the largest component in the graph
+```{r}
+calculated_eigenvector <- eigen_centrality(g_main_component, directed = FALSE, scale = TRUE, weights = NULL, options = arpack_defaults)
+calculated_eigenvector$vector
+```
+
+Now, extract the maximum eigenvector value. The max eigenvector value is: Karev (1)
+```{r}
+max_eigenvector <- max(calculated_eigenvector$vector)
+max_eigenvector_character <- V(g_main_component)[as.numeric(which(calculated_eigenvector$vector == max_eigenvector))]
+max_eigenvector_character
+max_eigenvector
+```
+
+
+1b. Run 2 community detection algorithms and calculate their modularity value
+First algorithm: Girvan-Newman
+We got 7 communities from this algorithm, with a modularity of 0.58
+```{r}
+gc <-  edge.betweenness.community(g)
+gc
+```
+
+Size of each community:
+```{r}
+gc <-  edge.betweenness.community(g)
+for (i in 1:length(gc)) {
+  print(length(gc[[i]]))
+}
+```
+
+```{r}
+gc$modularity
+max(gc$modularity)
+which.max(gc$modularity)
+```
+```{r}
+#Store cluster ids for each vertex
+memb <- membership(gc)
+head(memb)
+```
+Printed graph wit colorful communities:
+```{r}
+plot(g, vertex.size=5, #vertex.label=NA,
+     vertex.color=memb, asp=FALSE)
+```
+
+Second algorithm: fastgreedy
+We got 6 communities with a modularity value of 0.59
+```{r}
+g <- simplify(g)
+gc2 <-  fastgreedy.community(g)
+gc2
+```
+
+Size of each community:
+```{r}
+gc2 <-  fastgreedy.community(g)
+for (i in 1:length(gc2)) {
+  print(length(gc2[[i]]))
+}
+```
+
+colour the different communities
+```{r}
+plot(g,  vertex.size=5, vertex.label=NA,
+     vertex.color=membership(gc2), asp=FALSE)
+```
+
+```{r}
+plot(g,  vertex.size=5, vertex.label=NA,
+     vertex.color=membership(gc2), asp=FALSE)
+```
+
+
+###PART TWO - analyze twitter data
+
+```{r}
+#install.packages("httr")
+#install.packages("base64enc")
+#install.packages("jsonlite")
+#install.packages("wordcloud")
+
+```
+
+Setting auth keys, manually:
+```{r}
+consumer_key <- "kiNWnLLgrBlHl95N4aaCc2WdQ"
+consumer_secret <- "EG5PlTAQOcGL5ZR2fZGtVHuaBlo2bye4ghwz5keMH2hnMfjuka"
+access_token <- "2910578695-eftACY3tttmbRES0KxOZJ8wKzArn1VIYJR4CFE3"
+access_secret <- "zDWms2z6dBLRNu8vXJX5nvO7lAmSdmJu3bWK8MqQhafG0"
+```
+
+```{r}
+#sig <- setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+# start the authorisation process
+myapp = oauth_app("twitter", key=consumer_key, secret=consumer_secret)
+
+# sign using token and token secret
+sig1 = sign_oauth1.0(myapp, token=access_token, token_secret=access_secret)
+```
+Now let's get the last tweets in my home Timeline using the httr package.
+httr works well with Facebook, Google, Twitter, Github, etc. 
+The URL we input above related to part of the Twitter API. 
+
+```{r}
+my_timeline=GET("https://api.twitter.com/1.1/statuses/home_timeline.json", sig1)
+my_timeline
+```
+```{r}
+# Example: http://www.r-bloggers.com/downloading-your-twitter-feed-in-r/
+
+#Here we set up the OAuth credentials for a twitteR session:
+sig <- setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+
+#reading twits from home Timeline
+timeLine <- homeTimeline(n = 80, retryOnRateLimit = 5)
+```
+
+
+###2.a and 2.b:
+We decided to analyze the tweets of Donald Trump. We choose his 15 latest tweets, and turning the data into a corpus.  Each word (after cleaning) will be a vertex, and an edge between 2 words means that both words appear in the same tweet. If a certain word is connected to many other words, it might mean that it's part of a long tweet, but it might also mean that it is repeated in many different tweets. We can know if it is repeated in many tweets if it connects different communities, because words that don't appear in more than 1 tweet will be mote isolated since theyll only be connected to the other words in that tweet.
+These are the tweets:
+```{r}
+realDonaldTrump_tweets <- userTimeline("realDonaldTrump", n=15)
+head(realDonaldTrump_tweets)
+```
+
+We turn the tweets into a corpus
+```{r}
+ df <- do.call("rbind", lapply(realDonaldTrump_tweets, as.data.frame))
+ library(tm)
+ myCorpus <- Corpus(VectorSource(df$text))
+```
+
+We clean data by removing stopwords and applying tolower
+```{r}
+ #install("base64enc")
+ myCorpus<-tm_map(myCorpus, function(x) iconv(enc2utf8(x), sub = "byte"))
+ myCorpus <- tm_map(myCorpus, tolower)
+ myCorpus <- tm_map(myCorpus, removePunctuation)
+ myCorpus <- tm_map(myCorpus, removeNumbers)
+ myCorpus <- tm_map(myCorpus, removeWords, c(stopwords('english')))
+ inspect(myCorpus)
+```
+
+We create a termDocumentMatrix. Docs are the tweets, Terms are the words.
+```{r}
+myDtm <- TermDocumentMatrix(myCorpus, control = list(minWordLength = 4))
+inspect(myDtm)
+```
+
+Now we turn it into a term-term adjacency matrix. 
+```{r}
+# change it to a Boolean matrix
+ myDtm[myDtm>=3] <- 1
+
+ myDttm <- as.matrix(t(myDtm))
+out <- crossprod(myDttm)
+diag(out) <- 0       # (b/c you don't count co-occurrences of an aspect with itself)
+out[1:5,1:5]
+```
+
+###2.c:
+Now we turn it into a graph using igraph
+```{r}
+ library(igraph)
+ # build a graph from the above matrix
+ g2 <- graph.adjacency(out, weighted=T, mode = "undirected")
+ # remove loops
+ g2 <- simplify(g2)
+ # set labels and degrees of vertices
+ V(g2)$label <- V(g2)$name
+ V(g2)$degree <- degree(g2)
+ plot(g2)
+```
+
+This is the graph we will be working with!
+
+###2.d:
+Calculate Betweenness, Closeness and Eigenvector
+
+-Betweenness:
+We calculate the betweenness for all words in the g2
+```{r}
+calculated_betweenness <- betweenness(g2, v = V(g2), directed = FALSE, weights = NULL,
+  nobigint = TRUE, normalized = FALSE)
+head(calculated_betweenness)
+```
+
+Now, we extract the maximum betweenness value.
+```{r}
+max_betweenness <- max(calculated_betweenness)
+max_betweenness_character <- V(g2)[as.numeric(which(calculated_betweenness == max_betweenness))]
+max_betweenness_character
+max_betweenness
+```
+
+
+-Calculate the Closeness 
+```{r}
+calculated_closeness <- closeness(g2, v = V(g2), weights = NULL, normalized = FALSE)
+head(calculated_closeness)
+```
+
+Now, extract the maximum closeness value.
+```{r}
+max_closeness <- max(calculated_closeness)
+max_closeness_character <- V(g2)[as.numeric(which(calculated_closeness == max_closeness))]
+max_closeness_character
+max_closeness
+```
+
+ -Calculate the Eigenvector 
+```{r}
+calculated_eigenvector <- eigen_centrality(g2, directed = FALSE, scale = TRUE, weights = NULL, options = arpack_defaults)
+head(calculated_eigenvector$vector)
+```
+
+Now, extract the maximum eigenvector value. The max eigenvector value is: Karev (1)
+```{r}
+max_eigenvector <- max(calculated_eigenvector$vector)
+max_eigenvector_character <- V(g2)[as.numeric(which(calculated_eigenvector$vector == max_eigenvector))]
+max_eigenvector_character
+max_eigenvector
+```
+
+
+###Now for the second part - finding communities
+Find communities using 2 different algorithms:
+
+We apply Girvan_newman to find communities. The size of each community is listed below
+```{r}
+gc2 <-  edge.betweenness.community(g2)
+for (i in 1:length(gc2)) {
+  print(length(gc2[[i]]))
+}
+```
+
+See here how many groups were found and the modularity value:
+```{r}
+gc2
+```
+
+
+Printed graph with colorful communities:
+```{r}
+memb <- membership(gc2)
+plot(g2, vertex.size=5, #vertex.label=NA,
+     vertex.color=memb, asp=FALSE)
+```
+
+
+#Now we will apply the second algorithm: fastgreedy
+```{r}
+g2 <- simplify(g2)
+gc2 <-  fastgreedy.community(g2)
+gc2
+```
+
+Size of each community:
+```{r}
+gc2 <-  fastgreedy.community(g2)
+for (i in 1:length(gc2)) {
+  print(length(gc2[[i]]))
+}
+```
+
+colour the different communities
+```{r}
+plot(g2,  vertex.size=5, vertex.label=NA,
+     vertex.color=membership(gc2), asp=FALSE)
+```
+
+
+```{r}
+plot(g2,  vertex.size=5, vertex.label=NA,
+     vertex.color=membership(gc2), asp=FALSE)
+```
+
+
