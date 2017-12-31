@@ -115,7 +115,7 @@ is: Sloan (115.3667)
     max_betweenness_character <- V(g_main_component)[as.numeric(which(calculated_betweenness == max_betweenness))]
     max_betweenness_character
 
-    ## + 1/24 vertex, named, from 423d0f0:
+    ## + 1/24 vertex, named, from 280347b:
     ## [1] sloan
 
     max_betweenness
@@ -145,7 +145,7 @@ Torres (0.01754386)
     max_closeness_character <- V(g_main_component)[as.numeric(which(calculated_closeness == max_closeness))]
     max_closeness_character
 
-    ## + 1/24 vertex, named, from 423d0f0:
+    ## + 1/24 vertex, named, from 280347b:
     ## [1] torres
 
     max_closeness
@@ -176,7 +176,7 @@ is: Karev (1)
     max_eigenvector_character <- V(g_main_component)[as.numeric(which(calculated_eigenvector$vector == max_eigenvector))]
     max_eigenvector_character
 
-    ## + 1/24 vertex, named, from 423d0f0:
+    ## + 1/24 vertex, named, from 280347b:
     ## [1] karev
 
     max_eigenvector
@@ -326,10 +326,10 @@ The URL we input above related to part of the Twitter API.
     my_timeline
 
     ## Response [https://api.twitter.com/1.1/statuses/home_timeline.json]
-    ##   Date: 2017-12-29 13:43
+    ##   Date: 2017-12-31 16:53
     ##   Status: 200
     ##   Content-Type: application/json;charset=utf-8
-    ##   Size: 100 kB
+    ##   Size: 94.7 kB
 
     # Example: http://www.r-bloggers.com/downloading-your-twitter-feed-in-r/
 
@@ -358,22 +358,22 @@ tweet. These are the tweets:
     head(realDonaldTrump_tweets)
 
     ## [[1]]
-    ## [1] "realDonaldTrump: The Democrats have been told, and fully understand, that there can be no DACA without the desperately needed WALL a… https://t.co/sjkgrE1kQe"
+    ## [1] "realDonaldTrump: Why would smart voters want to put Democrats in Congress in 2018 Election when their policies will totally kill the… https://t.co/u7zgBWSLMY"
     ## 
     ## [[2]]
-    ## [1] "realDonaldTrump: Why is the United States Post Office, which is losing many billions of dollars a year, while charging Amazon and ot… https://t.co/fHKlK5bmUe"
+    ## [1] "realDonaldTrump: If the Dems (Crooked Hillary) got elected, your stocks would be down 50% from values on Election Day. Now they have… https://t.co/eJOxPGScHK"
     ## 
     ## [[3]]
-    ## [1] "realDonaldTrump: While the Fake News loves to talk about my so-called low approval rating, @foxandfriends just showed that my rating… https://t.co/u3cMWTck6M"
+    ## [1] "realDonaldTrump: Big protests in Iran. The people are finally getting wise as to how their money and wealth is being stolen and squa… https://t.co/3AhXkVG6Lh"
     ## 
     ## [[4]]
-    ## [1] "realDonaldTrump: In the East, it could be the COLDEST New Year’s Eve on record. Perhaps we could use a little bit of that good old G… https://t.co/tCjF8xdXep"
+    ## [1] "realDonaldTrump: “Trump Rally: Stocks put 2017 in the record books” https://t.co/0foQGaFjMh"
     ## 
     ## [[5]]
-    ## [1] "realDonaldTrump: Together, we are MAKING AMERICA GREAT AGAIN! https://t.co/OeyTdFyl1Q https://t.co/wdLQkfdy4m"
+    ## [1] "realDonaldTrump: Jobs are kicking in and companies are coming back to the U.S. Unnecessary regulations and high taxes are being dram… https://t.co/ts9xxdjQzU"
     ## 
     ## [[6]]
-    ## [1] "realDonaldTrump: I've been saying it for a long, long time. #NoKo https://t.co/LQl7tGhMdO"
+    ## [1] "realDonaldTrump: I use Social Media not because I like to, but because it is the only way to fight a VERY dishonest and unfair “pres… https://t.co/1YTuk89nmu"
 
 We turn the tweets into a corpus
 
@@ -393,15 +393,20 @@ We clean data by removing stopwords and applying tolower
 
     ## <<SimpleCorpus>>
     ## Metadata:  corpus specific: 1, document level (indexed): 0
-    ## Content:  documents: 7
+    ## Content:  documents: 12
     ## 
-    ## [1]  democrats   told  fully understand   can   daca without  desperately needed wall aג€¦ httpstcosjkgrekqe      
-    ## [2]    united states post office   losing many billions  dollars  year  charging amazon  otג€¦ httpstcofhklkbmue  
-    ## [3]   fake news loves  talk   socalled low approval rating foxandfriends just showed   ratingג€¦ httpstcoucmwtckm 
-    ## [4]   east     coldest new yearג€™s eve  record perhaps   use  little bit   good old gג€¦ httpstcotcjfxdxep       
-    ## [5] together   making america great  httpstcooeytdfylq httpstcowdlqkfdym                                          
-    ## [6] ive  saying    long long time noko httpstcolqltghmdo                                                          
-    ## [7] caught red handed   disappointed  china  allowing oil  go  north korea  will never   frieג€¦ httpstcoaiacfxnoa
+    ##  [1]   smart voters want  put democrats  congress   election   policies will totally kill theג€¦ httpstcouzgbwslmy            
+    ##  [2]   dems crooked hillary got elected  stocks      values  election day now  haveג€¦ httpstcoejoxpgschk                     
+    ##  [3] big protests  iran  people  finally getting wise     money  wealth   stolen  squaג€¦ httpstcoahxkvglh                    
+    ##  [4] ג€trump rally stocks put    record booksג€ httpstcofoqgafjmh                                                           
+    ##  [5] jobs  kicking   companies  coming back   us unnecessary regulations  high taxes   dramג€¦ httpstcotsxxdjqzu              
+    ##  [6]  use social media    like        way  fight   dishonest  unfair ג€presג€¦ httpstcoytuknmu                               
+    ##  [7]  taxes ג€   biggest corporate rate cut ever going back   corporate income tax rate  roughly  yג€¦ httpstcoxthivribyk    
+    ##  [8] oppressive regimes  endure forever   day will come   iranian people will face  choice  worג€¦ httpstcoefpoufhft          
+    ##  [9]  entire world understands   good people  iran want change     vast military power  tג€¦ httpstcoojmfsghy                 
+    ## [10] many reports  peaceful protests  iranian citizens fed   regimeג€™s corruption amp  squandering   natiג€¦ httpstcobljmwqbz
+    ## [11]  democrats   told  fully understand   can   daca without  desperately needed wall aג€¦ httpstcosjkgrekqe                 
+    ## [12]    united states post office   losing many billions  dollars  year  charging amazon  otג€¦ httpstcofhklkbmue
 
 We create a termDocumentMatrix. Docs are the tweets, Terms are the
 words.
@@ -409,24 +414,24 @@ words.
     myDtm <- TermDocumentMatrix(myCorpus, control = list(minWordLength = 4))
     inspect(myDtm)
 
-    ## <<TermDocumentMatrix (terms: 77, documents: 7)>>
-    ## Non-/sparse entries: 77/462
-    ## Sparsity           : 86%
-    ## Maximal term length: 17
+    ## <<TermDocumentMatrix (terms: 128, documents: 12)>>
+    ## Non-/sparse entries: 143/1393
+    ## Sparsity           : 91%
+    ## Maximal term length: 18
     ## Weighting          : term frequency (tf)
     ## Sample             :
-    ##                    Docs
-    ## Terms               1 2 3 4 5 6 7
-    ##   aג€               1 0 0 0 0 0 0
-    ##   can               1 0 0 0 0 0 0
-    ##   daca              1 0 0 0 0 0 0
-    ##   democrats         1 0 0 0 0 0 0
-    ##   desperately       1 0 0 0 0 0 0
-    ##   fully             1 0 0 0 0 0 0
-    ##   httpstcosjkgrekqe 1 0 0 0 0 0 0
-    ##   long              0 0 0 0 0 2 0
-    ##   needed            1 0 0 0 0 0 0
-    ##   told              1 0 0 0 0 0 0
+    ##            Docs
+    ## Terms       1 10 11 12 2 3 5 7 8 9
+    ##   day       0  0  0  0 1 0 0 0 1 0
+    ##   democrats 1  0  1  0 0 0 0 0 0 0
+    ##   election  1  0  0  0 1 0 0 0 0 0
+    ##   iran      0  0  0  0 0 1 0 0 0 1
+    ##   people    0  0  0  0 0 1 0 0 1 1
+    ##   protests  0  1  0  0 0 1 0 0 0 0
+    ##   put       1  0  0  0 0 0 0 0 0 0
+    ##   stocks    0  0  0  0 1 0 0 0 0 0
+    ##   want      1  0  0  0 0 0 0 0 0 1
+    ##   will      1  0  0  0 0 0 0 0 2 0
 
 Now we turn it into a term-term adjacency matrix.
 
@@ -438,13 +443,13 @@ Now we turn it into a term-term adjacency matrix.
     diag(out) <- 0       # (b/c you don't count co-occurrences of an aspect with itself)
     out[1:5,1:5]
 
-    ##              Terms
-    ## Terms         aג€ can daca democrats desperately
-    ##   aג€           0   1    1         1           1
-    ##   can           1   0    1         1           1
-    ##   daca          1   1    0         1           1
-    ##   democrats     1   1    1         0           1
-    ##   desperately   1   1    1         1           0
+    ##                    Terms
+    ## Terms               congress democrats election httpstcouzgbwslmy kill
+    ##   congress                 0         1        1                 1    1
+    ##   democrats                1         0        1                 1    1
+    ##   election                 1         1        0                 1    1
+    ##   httpstcouzgbwslmy        1         1        1                 0    1
+    ##   kill                     1         1        1                 1    0
 
 ### 2.c:
 
@@ -474,8 +479,10 @@ Calculate Betweenness, Closeness and Eigenvector
       nobigint = TRUE, normalized = FALSE)
     head(calculated_betweenness)
 
-    ##         aג€         can        daca   democrats desperately       fully 
-    ##           0           0           0           0           0           0
+    ##          congress         democrats          election httpstcouzgbwslmy 
+    ##             0.000           913.000           457.875             0.000 
+    ##              kill          policies 
+    ##             0.000             0.000
 
 Now, we extract the maximum betweenness value.
 
@@ -483,30 +490,22 @@ Now, we extract the maximum betweenness value.
     max_betweenness_character <- V(g2)[as.numeric(which(calculated_betweenness == max_betweenness))]
     max_betweenness_character
 
-    ## + 77/77 vertices, named, from 4429abe:
-    ##  [1] aג€               can               daca             
-    ##  [4] democrats         desperately       fully            
-    ##  [7] httpstcosjkgrekqe needed            told             
-    ## [10] understand        wall              without          
-    ## [13] amazon            billions          charging         
-    ## [16] dollars           httpstcofhklkbmue losing           
-    ## [19] many              office            otג€             
-    ## [22] post              states            united           
-    ## [25] year              approval          fake             
-    ## [28] foxandfriends     httpstcoucmwtckm  just             
-    ## + ... omitted several vertices
+    ## + 1/128 vertex, named, from 2a24187:
+    ## [1] iranian
 
     max_betweenness
 
-    ## [1] 0
+    ## [1] 1020.35
 
 -Calculate the Closeness
 
     calculated_closeness <- closeness(g2, v = V(g2), weights = NULL, normalized = FALSE)
     head(calculated_closeness)
 
-    ##         aג€         can        daca   democrats desperately       fully 
-    ## 0.000199362 0.000199362 0.000199362 0.000199362 0.000199362 0.000199362
+    ##          congress         democrats          election httpstcouzgbwslmy 
+    ##      0.0002233140      0.0002238639      0.0002255300      0.0002233140 
+    ##              kill          policies 
+    ##      0.0002233140      0.0002233140
 
 Now, extract the maximum closeness value.
 
@@ -514,36 +513,31 @@ Now, extract the maximum closeness value.
     max_closeness_character <- V(g2)[as.numeric(which(calculated_closeness == max_closeness))]
     max_closeness_character
 
-    ## + 14/77 vertices, named, from 4429abe:
-    ##  [1] bit               coldest           east             
-    ##  [4] eve               good              gג€              
-    ##  [7] httpstcotcjfxdxep little            new              
-    ## [10] old               perhaps           record           
-    ## [13] use               yearג€™s
+    ## + 1/128 vertex, named, from 2a24187:
+    ## [1] people
 
     max_closeness
 
-    ## [1] 0.0002055921
+    ## [1] 0.0002268603
 
 -Calculate the Eigenvector
 
     calculated_eigenvector <- eigen_centrality(g2, directed = FALSE, scale = TRUE, weights = NULL, options = arpack_defaults)
     head(calculated_eigenvector$vector)
 
-    ##          aג€          can         daca    democrats  desperately 
-    ## 5.192593e-16 4.154074e-16 3.634815e-16 3.634815e-16 3.115556e-16 
-    ##        fully 
-    ## 4.673333e-16
+    ##          congress         democrats          election httpstcouzgbwslmy 
+    ##                 0                 0                 0                 0 
+    ##              kill          policies 
+    ##                 0                 0
 
-Now, extract the maximum eigenvector value. The max eigenvector value
-is: Karev (1)
+Now, extract the maximum eigenvector value.
 
     max_eigenvector <- max(calculated_eigenvector$vector)
     max_eigenvector_character <- V(g2)[as.numeric(which(calculated_eigenvector$vector == max_eigenvector))]
     max_eigenvector_character
 
-    ## + 1/77 vertex, named, from 4429abe:
-    ## [1] east
+    ## + 1/128 vertex, named, from 2a24187:
+    ## [1] rate
 
     max_eigenvector
 
@@ -561,30 +555,33 @@ is listed below
       print(length(gc2[[i]]))
     }
 
+    ## [1] 9
     ## [1] 12
-    ## [1] 13
-    ## [1] 13
-    ## [1] 14
-    ## [1] 6
-    ## [1] 6
+    ## [1] 12
+    ## [1] 22
+    ## [1] 10
+    ## [1] 12
+    ## [1] 5
+    ## [1] 23
+    ## [1] 10
     ## [1] 13
 
 See here how many groups were found and the modularity value:
 
     gc2
 
-    ## IGRAPH clustering edge betweenness, groups: 7, mod: 0.83
+    ## IGRAPH clustering edge betweenness, groups: 10, mod: 0.74
     ## + groups:
     ##   $`1`
-    ##    [1] "aג€"               "can"               "daca"             
-    ##    [4] "democrats"         "desperately"       "fully"            
-    ##    [7] "httpstcosjkgrekqe" "needed"            "told"             
-    ##   [10] "understand"        "wall"              "without"          
+    ##   [1] "congress"          "httpstcouzgbwslmy" "kill"             
+    ##   [4] "policies"          "put"               "smart"            
+    ##   [7] "theג€"             "totally"           "voters"           
     ##   
     ##   $`2`
-    ##    [1] "amazon"            "billions"          "charging"         
-    ##    [4] "dollars"           "httpstcofhklkbmue" "losing"           
-    ##    [7] "many"              "office"            "otג€"             
+    ##    [1] "democrats"         "aג€"               "can"              
+    ##    [4] "daca"              "desperately"       "fully"            
+    ##    [7] "httpstcosjkgrekqe" "needed"            "told"             
+    ##   [10] "understand"        "wall"              "without"          
     ##   + ... omitted several groups/vertices
 
 Printed graph with colorful communities:
@@ -602,18 +599,18 @@ Now we will apply the second algorithm: fastgreedy
     gc2 <-  fastgreedy.community(g2)
     gc2
 
-    ## IGRAPH clustering fast greedy, groups: 7, mod: 0.83
+    ## IGRAPH clustering fast greedy, groups: 9, mod: 0.73
     ## + groups:
     ##   $`1`
-    ##    [1] "bit"               "coldest"           "east"             
-    ##    [4] "eve"               "good"              "gג€"              
-    ##    [7] "httpstcotcjfxdxep" "little"            "new"              
-    ##   [10] "old"               "perhaps"           "record"           
-    ##   [13] "use"               "yearג€™s"         
+    ##    [1] "change"           "entire"           "good"            
+    ##    [4] "httpstcoojmfsghy" "military"         "power"           
+    ##    [7] "tג€"              "understands"      "vast"            
+    ##   [10] "world"           
     ##   
     ##   $`2`
-    ##    [1] "amazon"            "billions"          "charging"         
-    ##    [4] "dollars"           "httpstcofhklkbmue" "losing"           
+    ##    [1] "congress"           "election"           "httpstcouzgbwslmy" 
+    ##    [4] "kill"               "policies"           "put"               
+    ##    [7] "smart"              "theג€"              "totally"           
     ##   + ... omitted several groups/vertices
 
 Size of each community:
@@ -623,13 +620,15 @@ Size of each community:
       print(length(gc2[[i]]))
     }
 
-    ## [1] 14
-    ## [1] 13
-    ## [1] 13
-    ## [1] 13
+    ## [1] 10
+    ## [1] 26
     ## [1] 12
-    ## [1] 6
-    ## [1] 6
+    ## [1] 11
+    ## [1] 12
+    ## [1] 11
+    ## [1] 23
+    ## [1] 10
+    ## [1] 13
 
 colour the different communities
 

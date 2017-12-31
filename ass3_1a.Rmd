@@ -302,7 +302,7 @@ calculated_eigenvector <- eigen_centrality(g2, directed = FALSE, scale = TRUE, w
 head(calculated_eigenvector$vector)
 ```
 
-Now, extract the maximum eigenvector value. The max eigenvector value is: Karev (1)
+Now, extract the maximum eigenvector value.
 ```{r}
 max_eigenvector <- max(calculated_eigenvector$vector)
 max_eigenvector_character <- V(g2)[as.numeric(which(calculated_eigenvector$vector == max_eigenvector))]
